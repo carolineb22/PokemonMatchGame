@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pokémon Memory Game</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <h1>Pokémon Memory Game</h1>
+
+  <div id="difficulty-levels">
+  <label><input type="radio" name="difficulty" value="easy" checked> Easy</label>
+  <label><input type="radio" name="difficulty" value="medium"> Medium</label>
+  <label><input type="radio" name="difficulty" value="hard"> Hard</label>
+  </div>
+
+  <div id="game-stats" style="margin-bottom: 20px; font-family: Arial, sans-serif;">
+  <span>Clicks: <span id="click-count">0</span></span> | 
+  <span>Pairs Matched: <span id="matched-count">0</span></span> | 
+  <span>Pairs Left: <span id="pairs-left-count">3</span></span> | 
+  <span>Total Pairs: <span id="total-pairs-count">3</span></span> | 
+  <span>Time Left: <span id="timer">60</span>s</span>
+</div>
+
+
+
+  <div id="game-board" class="board"></div>
+
+  <div id="game-over-message" style="display:none; font-size: 2em; color: red; text-align: center; margin-top: 20px;">
+  ⏰ Time’s up! Game over. Try again!
+  </div>
+  <div id="win-message" style="display:none; font-size: 2em; color: green; text-align: center; margin-top: 20px;">
+    🎉 You won! All pairs matched! 🎉
+  </div>
+
+  </br>
+
+  <button id="start-btn" style="margin-bottom: 20px;">Start Game</button>
+  <button id="reset-btn" style="margin-left: 10px;">Reset Game</button>
+
+
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="index.js"></script>
+</body>
+</html>
