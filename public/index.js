@@ -18,6 +18,8 @@ $(document).ready(() => {
   setupResetButton();
   setupStartButton();
   setupDifficultyChangeListener();
+  setupThemeToggle();
+  setupGuaranteedMatch();
 });
 
 
@@ -123,6 +125,17 @@ function setupFlipLogic() {
       checkForMatch(firstCard, secondCard, () => {
         resetFlipVars();
         lockBoard = false;
+
+        if (matchedPairs === totalPairs) {
+        gameActive = false;
+        clearInterval(timerInterval);
+        showWinMessage();
+
+        // Disable power-ups when game is won
+        $('#match-btn').prop('disabled', true);
+        $('#reveal-btn').prop('disabled', true);
+    }
+
       });
     }
   });
@@ -198,6 +211,11 @@ function setupResetButton() {
   $('#reset-btn').off('click').on('click', () => {
     let difficulty = $('input[name="difficulty"]:checked').val() || 'easy';
     $('#start-btn').prop('disabled', false);
+
+    // Disable power-up buttons on reset
+    $('#match-btn').prop('disabled', true);
+    $('#reveal-btn').prop('disabled', true);
+
     setupGame(difficulty);
   });
 }
@@ -211,10 +229,14 @@ function setupDifficultyChangeListener() {
 
 function setupStartButton() {
   $('#start-btn').off('click').on('click', () => {
-    canFlip = true;
-    $('#start-btn').prop('disabled', true);
+  canFlip = true;
+  $('#start-btn').prop('disabled', true);
 
-    timerInterval = setInterval(() => {
+  // Enable power-up buttons when game starts
+  $('#match-btn').prop('disabled', false);
+  $('#reveal-btn').prop('disabled', false);
+
+  timerInterval = setInterval(() => {
     if (!gameActive) {
       clearInterval(timerInterval);
       return;
@@ -227,9 +249,65 @@ function setupStartButton() {
       gameActive = false;
       canFlip = false;
       showGameOverMessage();
-      // Disable all cards to prevent clicks after game over
+
       $(".card").off("click");
+
+      // Disable power-up buttons on game over
+      $('#match-btn').prop('disabled', true);
+      $('#reveal-btn').prop('disabled', true);
     }
   }, 1000);
+});
+}
+
+function setupThemeToggle() {
+  $('input[name="theme"]').on('change', function () {
+    const selectedTheme = $(this).val();
+    $('body').removeClass('light-theme dark-theme').addClass(`${selectedTheme}-theme`);
+  });
+
+  // Set initial theme
+  const initialTheme = $('input[name="theme"]:checked').val();
+  $('body').addClass(`${initialTheme}-theme`);
+}
+
+function setupGuaranteedMatch() {
+  $('#match-btn').on('click', () => {
+    
+    if (!gameActive) return;
+
+    let images = {};
+    let match = [];
+
+    $('.card').each(function () {
+      if ($(this).hasClass('flip')) return; // already flipped
+      if (gameActive && !canFlip) return; // game not active
+      
+
+      const src = $(this).find('.front_face img').attr('src');
+
+      if (images[src]) {
+        match = [images[src], this];
+        return false; // exit loop early
+      } else {
+        images[src] = this;
+      }
+    });
+
+    if (match.length === 2) {
+      $(match[0]).addClass('flip').off('click');
+      $(match[1]).addClass('flip').off('click');
+      matchedPairs++;
+      $('#matched-count').text(matchedPairs);
+      $('#pairs-left-count').text(totalPairs - matchedPairs);
+
+      if (matchedPairs === totalPairs) {
+        gameActive = false;
+        clearInterval(timerInterval);
+        showWinMessage();
+      }
+    }
+
+    $('#match-btn').prop('disabled', true); // optional: one-time use
   });
 }

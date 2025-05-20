@@ -9,6 +9,11 @@
 <body>
   <h1>Pokémon Memory Game</h1>
 
+  <div class="theme-toggle">
+  <label><input type="radio" name="theme" value="light" checked> Light</label>
+  <label><input type="radio" name="theme" value="dark"> Dark</label>
+  </div>
+
   <div id="difficulty-levels">
   <label><input type="radio" name="difficulty" value="easy" checked> Easy</label>
   <label><input type="radio" name="difficulty" value="medium"> Medium</label>
@@ -26,6 +31,12 @@
 
 
   <div id="game-board" class="board"></div>
+
+  </br>
+
+  <button id="match-btn" disabled>Guaranteed Match</button>
+  
+   </br>
 
   <div id="game-over-message" style="display:none; font-size: 2em; color: red; text-align: center; margin-top: 20px;">
   ⏰ Time’s up! Game over. Try again!
